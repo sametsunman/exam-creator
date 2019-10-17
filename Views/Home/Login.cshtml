@@ -1,0 +1,36 @@
+﻿@model ExamCreator.Models.User
+@{
+
+    ViewData["Title"] = "Oturum Aç";
+}
+
+
+<div class="container p-5  d-flex justify-content-center">
+    <div class="col-12 col-lg-6 m-5">
+        <div class="contact-form">
+            <h4>Oturum Aç</h4>
+
+            <form method="post" asp-controller="Home" asp-action="Login" role="form">
+                <div class="row">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i style="font-size:larger" class="fa fa-user"></i>
+                        </div>
+                        <input type="text" asp-for="Username" value="admin" class="form-control" placeholder="Kullanıcı Adı Giriniz" />
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i style="font-size:larger" class="fa fa-lock"></i>
+                        </div>
+                        <input type="password" asp-for="Password" value="password" class="form-control" placeholder="Şifre Giriniz" />
+                    </div>
+
+                    <div class="col-12">
+                        <button class="btn clever-btn w-100">Oturum Aç</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
