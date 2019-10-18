@@ -43,6 +43,7 @@ namespace ExamCreator.Controllers
             using (var db = new Context())
             {
               
+                ///Son eklenen sorular başta gözükmesi için sıraladık.
                 List<Exam> exams = db.Exams.OrderByDescending(x=>x.CreatedDate).ToList();
 
                 return View(exams);
@@ -61,7 +62,7 @@ namespace ExamCreator.Controllers
         [HttpPost]
         public bool CreateExam([FromBody]ExamViewModel data)
         {
-
+            ///Önce sınavda başlık ve makaleyi veritabanına kaydediyoruz
             Exam exam = new Exam()
             {
                 Title = data.Title,
@@ -74,6 +75,7 @@ namespace ExamCreator.Controllers
                 db.SaveChanges();
             }
 
+            ///Daha sonra ise sınava ait soruları veritabanına ekliyoruz
             data.QuestionList.ForEach(question => {
 
                 question.ExamId = exam.ExamId;
@@ -91,6 +93,7 @@ namespace ExamCreator.Controllers
 
         public IActionResult SolveExam(int id)
         {
+            ///Sınav bilgilerini gönderiyoruz
             using (var db = new Context())
             {
                 ExamViewModel exam = new ExamViewModel()
@@ -113,9 +116,11 @@ namespace ExamCreator.Controllers
             int id = (int)TempData["id"];
             using (var db = new Context())
             {
+                ///Ön taraftan cevaplanan sorular geliyor
                 List<Question> questionList = db.Questions.Where(x => x.ExamId == id).ToList();
                 bool[] correctAnswers = new bool[4];
 
+                ///Eğer cevaplanan soru ile doğru cevap eşit ise true döndürüyor
                 for(int i=0; i<4;i++)
                 correctAnswers[i] = (questionList.ElementAt(i).CorrectAnswer) == answers[i];
 
@@ -129,6 +134,7 @@ namespace ExamCreator.Controllers
         {
             using (var db = new Context())
             {
+                ///Makale silme işlemi
                 var exam = db.Exams.Where(x => x.ExamId == id).SingleOrDefault();
                 var questionList = db.Questions.Where(x => x.ExamId == id).ToList();
                 db.Remove(exam);
@@ -167,6 +173,7 @@ namespace ExamCreator.Controllers
 
                 }, CookieAuthenticationDefaults.AuthenticationScheme);
 
+                    ///Oturum açma işlemi
                     var principal = new ClaimsPrincipal(identity);
                     var login = HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
@@ -174,6 +181,7 @@ namespace ExamCreator.Controllers
                 }
                 else
                 {
+                    ///Oturum açma işlemi başarısız ise ön tarafa TempData ile hata yolluyoruz
                     TempData["warning"] = "Kullanıcı adı ya da şifre bilgileri hatalı.";
                 }
             }
@@ -199,6 +207,7 @@ namespace ExamCreator.Controllers
 
         public static async Task<List<ISyndicationContent>> RssFeedReader()
         {
+            ///Wired Sitesindeki Rss beslemesinden son haberlerin linklerini ve başlıklarını çekiyoruz
             string feedUri = "https://www.wired.com/feed/rss";
             List<ISyndicationContent> contentList = new List<ISyndicationContent>();
             using (var xmlReader = XmlReader.Create(feedUri, new XmlReaderSettings() { Async = true }))
@@ -220,6 +229,7 @@ namespace ExamCreator.Controllers
 
         public List<ArticleViewModel> GetArticleContent() {
 
+            ///Linklere giderek makaleleri çekiyoruz
             List<ArticleViewModel> articleList = new List<ArticleViewModel>();
             var contentList = RssFeedReader().Result;
 
@@ -230,6 +240,8 @@ namespace ExamCreator.Controllers
                 HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
                 WebClient client = new WebClient();
                 doc.LoadHtml(client.DownloadString(articleUrl));
+
+                ///Makaleler article__body altında sınıflarda bulunuyor. Bu yüzden bu sınıf tanımlı nodeları elde ediyoruz.
                 var articleBody = doc.DocumentNode.SelectNodes("//div[contains(@class,'article__body')]");
                 if (articleBody!=null) { 
                 StringBuilder articleText = new StringBuilder();
@@ -239,6 +251,7 @@ namespace ExamCreator.Controllers
 
                     foreach (var node in innerNodes.SelectNodes("*"))
                     {
+                        ///Çekilen nodelarda istenmeyen yazılar mevcut, bu yüzden p etiketi dışındakileri dahil etmiyoruz
                         if (node.Name == "p")
                         {
                             articleText.Append(node.InnerText);
@@ -247,6 +260,8 @@ namespace ExamCreator.Controllers
 
 
                 }
+
+                ///Metnin son halini makale listesine ekliyoruz.
                 ArticleViewModel article = new ArticleViewModel
                 {
                     Title = content.Fields.Where(y => y.Name == "title").Select(z => z.Value).SingleOrDefault(),

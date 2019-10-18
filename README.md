@@ -1,9 +1,12 @@
 # ExamCreator - Sınav Oluşturma Uygulaması
 
+-Username: admin -Password: password
+
 ### Kullanılan Teknolojiler
 
 - Net Core 3.0
 - Vue.Js 2.6
+- SqLite
 
 
 ### Ekran Görüntüleri
