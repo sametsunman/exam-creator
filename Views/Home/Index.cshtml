@@ -1,10 +1,11 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<ExamCreator.Models.Exam>
+@{
+    ViewData["Title"] = "Sınav Listesi";
 }
 
-
-    <div class="container p-5  d-flex justify-content-center">
-        <table class="table">
+    <div class="container row p-5  d-flex justify-content-center">
+        <a href="/Home/CreateExam" class="btn btn-success ml-auto mb-2 mr-2">Sınav Oluştur</a>
+        <table class="table table-striped rounded">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
@@ -14,33 +15,22 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>
-                        <a href="#" class="btn-sm btn-info fas fa-clipboard-list" title="Önizleme" />
-                        <a href="#" class="btn-sm btn-danger fas fa-trash" title="Sil" />
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>
-                        <a href="#" class="btn-sm btn-info fas fa-clipboard-list" title="Önizleme" />
-                        <a href="#" class="btn-sm btn-danger fas fa-trash" title="Sil" />
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>
-                        <a href="#" class="btn-sm btn-info fas fa-clipboard-list" title="Önizleme" />
-                        <a href="#" class="btn-sm btn-danger fas fa-trash" title="Sil" />
-                    </td>
-                </tr>
+                @{
+                    int sayac = 0;
+                    foreach (var exam in Model)
+                    {
+                        <tr>
+                            <td>@(sayac = sayac + 1)</td>
+                            <td>@exam.Title</td>
+                            <td>@exam.CreatedDate</td>
+                            <td>
+                                <a href="/Home/SolveExam/@exam.ExamId" class="btn-sm btn-info fa fa-list"></a>
+                                <a href="/Home/DeleteExam/@exam.ExamId" class="btn-sm btn-danger fa fa-trash"></a>
+                            </td>
+                        </tr>
+                    }
+                }
+
             </tbody>
         </table>
-        </div>
+    </div>

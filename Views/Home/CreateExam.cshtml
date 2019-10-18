@@ -1,186 +1,180 @@
-﻿@{
+﻿@model List<ExamCreator.Models.ArticleViewModel>
+@{
     ViewData["Title"] = "Sınav Oluşturma";
 }
 
 
-    <div class="container p-5  d-flex justify-content-center">
-        <form method="post" asp-controller="Home" asp-action="CreateExam" role="form">
-            <div class="row">
+<div id="exam" class="container p-5  d-flex justify-content-center">
+    <div role="form">
+        <div class="border rounded p-2 my-2">
+            <div class="row mb-2">
                 <div class="col-12">
                     <div class="input-group">
-                        <select class="form-control">
+                        <select id="lstArticles" name="lstArticles" class="form-control" v-on:change="selectArticle($event, $event.target.selectedIndex)">
                             <option value="">Paragraf Seçiniz</option>
-                            <option value="A">dsfdsfsdf</option>
-                            <option value="B">sdfsdfs</option>
-                            <option value="C">dsfsdfsdfs</option>
-                            <option value="D">dsfsdf</option>
+                            <option v-for="article in articleList" :key="article.Key" :value="article.Key" >
+                                {{ article.title }}
+                            </option>
                         </select>
+
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
                     <div class="input-group">
-                        <textarea  class="form-control" width="100%" />
+                        <textarea  class="form-control" v-model="article.content" style="height:180px"></textarea>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="1. Soruyu Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <select class="form-control">
-                            <option value="">Doğru Cevabı Seçiniz</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
-                            <option value="D">D</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="2. Soruyu Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <select class="form-control">
-                            <option value="">Doğru Cevabı Seçiniz</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
-                            <option value="D">D</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="3. Soruyu Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <select class="form-control">
-                            <option value="">Doğru Cevabı Seçiniz</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
-                            <option value="D">D</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="4. Soruyu Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group">
-                        <select class="form-control">
-                            <option value="">Doğru Cevabı Seçiniz</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
-                            <option value="D">D</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <input type="submit" class="btn clever-btn w-100" value="Sınavı Oluştur">
-                </div>
-                </div>
-</form>
         </div>
+        @for (int i=0; i < 4; i++)
+        {
+            <div class="p-2 row d-flex justify-content-center border rounded my-2">
+                <div class="col-12 pb-3">
+                    <div class="input-group">
+                        <div class="input-group-append">
+                            <span class="input-group-text">@(i + 1).</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Soruyu Giriniz" v-model="article.question[@i].q" required />
+                        <div class="invalid-feedback">
+                            Soru boş olamaz
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 pb-1">
+                    <div class="input-group">
+                        <div class="input-group-append">
+                            <span class="input-group-text">A</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" v-model="article.question[@i].a" required />
+                        <div class="invalid-feedback">
+                            Cevap şıkları boş olamaz
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 pb-1">
+                    <div class="input-group">
+                        <div class="input-group-append">
+                            <span class="input-group-text">B</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" v-model="article.question[@i].b" required />
+                        <div class="invalid-feedback">
+                            Cevap şıkları boş olamaz
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 pb-1">
+                    <div class="input-group">
+                        <div class="input-group-append">
+                            <span class="input-group-text">C</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" v-model="article.question[@i].c" required />
+                        <div class="invalid-feedback">
+                            Cevap şıkları boş olamaz
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 pb-1">
+                    <div class="input-group">
+                        <div class="input-group-append">
+                            <span class="input-group-text">D</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" v-model="article.question[@i].d" required />
+                        <div class="invalid-feedback">
+                            Cevap şıkları boş olamaz
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 mx-auto">
+                    <div class="input-group">
+                        <select class="form-control" v-model="article.question[@i].s" required>
+                            <option value="">Doğru Cevabı Seçiniz</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Doğru cevap boş olamaz
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="row mt-3"> 
+            <div class="col-12">
+                <input type="button" class="btn btn-success clever-btn w-100" v-on:click="createExam" value="Sınavı Oluştur">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+
+        let vm = new Vue({
+            el: '#exam',
+            data: {
+                articleList: [],
+                article: {
+                    title: '',
+                    content:'',
+                    question: [
+                        { q: '', a: '', b: '', c: '', d: '', s: '' },
+                        { q: '', a: '', b: '', c: '', d: '', s: '' },
+                        { q: '', a: '', b: '', c: '', d: '', s: '' },
+                        { q: '', a: '', b: '', c: '', d: '', s: '' }
+                    ]
+
+                }
+            },
+            methods: {
+                selectArticle(event, selectedIndex) {
+                    this.article.title = this.articleList[selectedIndex].title;
+                    this.article.content = this.articleList[selectedIndex].content;
+                },
+                createExam() {
+                        axios({
+                            method: 'post',
+                            url: '/Home/CreateExam',
+                            data: {
+                                Value: this.article
+                            }
+                        })
+
+                },
+
+            },
+            updated() {
+    
+
+            },
+            mounted() {
+                axios.get('@Url.Action("GetArticleContent")')
+                            .then(response => {
+                                this.articleList = response.data;
+                            });
+            },
+            watch: {
+
+
+
+            }
+
+
+
+
+        });
+
+
+
+
+
+
+
+    </script>
+}
+

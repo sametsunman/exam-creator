@@ -5,32 +5,51 @@
 }
 
 
-<div class="container p-5  d-flex justify-content-center">
-    <div class="col-12 col-lg-6 m-5">
-        <div class="contact-form">
-            <h4>Oturum Aç</h4>
+<div class="container p-5 d-flex justify-content-center">
+    <div class="card col-12 col-lg-6 m-5">
+        <div class="card-body contact-form">
 
             <form method="post" asp-controller="Home" asp-action="Login" role="form">
-                <div class="row">
-                    <div class="input-group">
-                        <div class="input-group-addon">
-                            <i style="font-size:larger" class="fa fa-user"></i>
+
+                <div class="row d-flex justify-content-center">
+                    <center class="mb-4">
+                        <span className="text-white mb-5 mt-4 font-weight-bold">
+                            <strong className="text-white font-weight-bold" style="font-size:x-large;text-shadow:0px 0px 1px black">Oturum Aç</strong>
+                        </span>
+                    </center>
+
+                        @if (TempData["warning"] != null)
+                        {
+                            <div class="col-12 alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <h5>
+                                    <i class="icon fa fa-info-circle"></i> Hata
+                                </h5>
+                                @TempData["warning"]
+                            </div>
+                        }
+                    
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i style="font-size:larger" class="fa fa-user"></i></div>
                         </div>
+
                         <input type="text" asp-for="Username" value="admin" class="form-control" placeholder="Kullanıcı Adı Giriniz" />
                     </div>
 
-                    <div class="input-group">
-                        <div class="input-group-addon">
-                            <i style="font-size:larger" class="fa fa-lock"></i>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i style="font-size:larger" class="fa fa-lock"></i></div>
                         </div>
                         <input type="password" asp-for="Password" value="password" class="form-control" placeholder="Şifre Giriniz" />
                     </div>
 
-                    <div class="col-12">
-                        <button class="btn clever-btn w-100">Oturum Aç</button>
+                    <div class="col-12 mt-2">
+                        <button class="btn btn-primary clever-btn w-100">Oturum Aç</button>
                     </div>
                 </div>
+
+
             </form>
         </div>
-    </div>
 </div>

@@ -1,53 +1,27 @@
 ﻿@{
     ViewData["Title"] = "Sınav Önizleme";
 }
-
+@model ExamCreator.Models.ExamViewModel
 
 <div class="container p-5  d-flex justify-content-center">
     <form method="post" asp-controller="Home" asp-action="SolveExam" role="form">
         <div class="row">
             <div class="col-12">
                 <div class="input-group">
-                    <label class="form-control" width="100%" />
+                    <label class="form-control" width="100%">@Model.Content</label>
                 </div>
             </div>
         </div>
         <div class="row">
+            @foreach(var question in Model.QuestionList){ 
             <div class="col-6">
-                <div class="row"><p>dlfjdslgjlfgj</p></div>
-                <div class="row"><span>A) Samöflmdfl</span></div>
-                <div class="row"><span>B) Tkdlgkfkgkg</span></div>
-                <div class="row"><span>C) Bdkdfdsldg</span></div>
-                <div class="row"><span>D) Fdslgjlfgj</span></div>
+                <div class="row"><p>@question.QuestionText</p></div>
+                <div class="row"><span>A) @question.AnswerA</span></div>
+                <div class="row"><span>B) @question.AnswerB</span></div>
+                <div class="row"><span>C) @question.AnswerC</span></div>
+                <div class="row"><span>D) @question.AnswerD</span></div>
             </div>
-            <div class="col-6">
-                <div class="row"><p>dlfjdslgjlfgj</p></div>
-                <div class="row"><span>A) Samöflmdfl</span></div>
-                <div class="row"><span>B) Tkdlgkfkgkg</span></div>
-                <div class="row"><span>C) Bdkdfdsldg</span></div>
-                <div class="row"><span>D) Fdslgjlfgj</span></div>
-            </div>
-            <div class="col-6">
-                <div class="row"><p>dlfjdslgjlfgj</p></div>
-                <div class="row"><span>A) Samöflmdfl</span></div>
-                <div class="row"><span>B) Tkdlgkfkgkg</span></div>
-                <div class="row"><span>C) Bdkdfdsldg</span></div>
-                <div class="row"><span>D) Fdslgjlfgj</span></div>
-            </div>
-            <div class="col-6">
-                <div class="row"><p>dlfjdslgjlfgj</p></div>
-                <div class="row"><span>A) Samöflmdfl</span></div>
-                <div class="row"><span>B) Tkdlgkfkgkg</span></div>
-                <div class="row"><span>C) Bdkdfdsldg</span></div>
-                <div class="row"><span>D) Fdslgjlfgj</span></div>
-            </div>
-            <div class="col-6">
-                <div class="row"><p>dlfjdslgjlfgj</p></div>
-                <div class="row"><span>A) Samöflmdfl</span></div>
-                <div class="row"><span>B) Tkdlgkfkgkg</span></div>
-                <div class="row"><span>C) Bdkdfdsldg</span></div>
-                <div class="row"><span>D) Fdslgjlfgj</span></div>
-            </div>
+            }
         </div>
         <div class="row">
             <div class="col-12">

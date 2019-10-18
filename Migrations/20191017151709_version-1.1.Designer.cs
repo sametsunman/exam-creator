@@ -3,14 +3,16 @@ using System;
 using ExamCreator.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExamCreator.Migrations
 {
-    [DbContext(typeof(ExamCreatorContext))]
-    partial class ExamCreatorContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(Context))]
+    [Migration("20191017151709_version-1.1")]
+    partial class version11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,12 +24,15 @@ namespace ExamCreator.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Content")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<string>("Paragraph")
+                    b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ExamId");
