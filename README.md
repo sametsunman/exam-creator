@@ -8,15 +8,23 @@
 
 ### Ekran Görüntüleri
 
--Oturum Açma Sayfası-
-![GitHub Logo](/Screenshots/1.jpg)
+<div align="center">
+  <img width="600" src="/Screenshots/1.jpg"><br />
+  <span>-Oturum Açma Sayfası-</span><br /><br />
+</div>
 
--Sınav Listesi Sayfası-
-![GitHub Logo](/Screenshots/2.jpg)
+<div align="center">
+  <img width="600" src="/Screenshots/2.jpg"><br />
+  <span>-Sınav Listesi Sayfası-</span><br /><br />
+</div>
 
--Sınav Oluşturma Sayfası-
-![GitHub Logo](/Screenshots/3.jpg)
+<div align="center">
+  <img width="600" src="/Screenshots/3.jpg"><br />
+  <span>-Sınav Oluşturma Sayfası-</span><br /><br />
+</div>
 
--Sınav Çözüm Sayfası-
-![GitHub Logo](/Screenshots/4.jpg)
+<div align="center">
+  <img width="600" src="/Screenshots/4.jpg"><br />
+  <span>-Sınav Çözüm Sayfası-</span>
+</div>
 
