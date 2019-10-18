@@ -3,30 +3,92 @@
 }
 @model ExamCreator.Models.ExamViewModel
 
-<div class="container p-5  d-flex justify-content-center">
-    <form method="post" asp-controller="Home" asp-action="SolveExam" role="form">
+<div id="solveExam" class="container p-5  d-flex justify-content-center">
+    <form  role="form">
         <div class="row">
             <div class="col-12">
-                <div class="input-group">
-                    <label class="form-control" width="100%">@Model.Content</label>
-                </div>
+                <h5>@Model.Title</h5>
+            </div>
+            <div class="col-12 border rounded" style="width: 600px; height: 200px; overflow-y: scroll;">
+                <span>@Model.Content</span>
             </div>
         </div>
         <div class="row">
-            @foreach(var question in Model.QuestionList){ 
-            <div class="col-6">
-                <div class="row"><p>@question.QuestionText</p></div>
-                <div class="row"><span>A) @question.AnswerA</span></div>
-                <div class="row"><span>B) @question.AnswerB</span></div>
-                <div class="row"><span>C) @question.AnswerC</span></div>
-                <div class="row"><span>D) @question.AnswerD</span></div>
+            @{ int count = 0;}
+            @foreach (var question in Model.QuestionList)
+            {
+            <div class="col-6 py-2">
+                <div class="row"><h6>@(count = count + 1)) @question.QuestionText</h6></div>
+
+                <div class="row border rounded p-1 m-1" id="questionDivA-@(count-1)"><input class="mt-2 mr-1" type="radio" id="questionA-@(count-1)" name="question-@count" value="A" v-model="selectedAnswers[@(count-1)]" checked><label for="questionA-@(count-1)">A) @question.AnswerA</label></div>
+                <div class="row border rounded p-1 m-1" id="questionDivB-@(count-1)"><input class="mt-2 mr-1"  type="radio" id="questionB-@(count-1)" name="question-@count" value="B" v-model="selectedAnswers[@(count-1)]"><label for="questionB-@(count-1)">B) @question.AnswerB</label></div>
+                <div class="row border rounded p-1 m-1" id="questionDivC-@(count-1)"><input class="mt-2 mr-1"  type="radio" id="questionC-@(count-1)" name="question-@count" value="C" v-model="selectedAnswers[@(count-1)]"><label for="questionC-@(count-1)">C) @question.AnswerC</label></div>
+                <div class="row border rounded p-1 m-1" id="questionDivD-@(count-1)"><input class="mt-2 mr-1"  type="radio" id="questionD-@(count-1)" name="question-@count" value="D" v-model="selectedAnswers[@(count-1)]"><label for="questionD-@(count-1)">D) @question.AnswerD</label></div>
             </div>
             }
         </div>
         <div class="row">
             <div class="col-12">
-                <input type="submit" class="btn clever-btn w-100" value="Sınavı Bitir">
+                <input type="button" class="btn btn-primary clever-btn w-100" v-show="!isSolved" v-on:click="solveExam" value="Sınavı Bitir">
+                <input type="button" class="btn btn-primary clever-btn w-100" v-show="isSolved" v-on:click="solveAgain" value="Yeniden Dene">
             </div>
         </div>
     </form>
 </div>
+
+
+@section scripts{
+
+    <script>
+
+        let vm = new Vue({
+            el: '#solveExam',
+            data: {
+                isSolved:false,
+                selectedAnswers: ['','','',''],
+            },
+            methods: {
+                solveExam() {
+                    axios({
+                        method: 'post',
+                        url: '/Home/SolveExam',
+                        data: this.selectedAnswers
+                        }).then(response => {
+                            if (response.data) {
+                                this.isSolved = true;
+
+                                for (var i = 0; i < 4; i++) {
+                                    var elementClass = document.getElementById("questionDiv" + this.selectedAnswers[i] + "-" + i);
+                                    if (elementClass != undefined)
+                                    {
+                                       if (response.data[i]) {
+                                        elementClass.classList.add("bg-success");
+                                        }
+                                        else {
+                                        elementClass.classList.add("bg-danger");
+
+                                        }
+                                    }
+
+                                }
+                            }
+                        });
+
+
+                },
+                solveAgain() {
+                    location.reload();
+                }
+
+            }
+        });
+
+
+
+
+
+
+
+    </script>
+}
+

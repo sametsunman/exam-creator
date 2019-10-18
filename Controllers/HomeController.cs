@@ -13,9 +13,14 @@ using Microsoft.SyndicationFeed;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExamCreator.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -37,10 +42,8 @@ namespace ExamCreator.Controllers
         {
             using (var db = new Context())
             {
-               // db.Add(new Exam { Title = "dfgfdg", Content = "İçerik burası" });
-               //db.SaveChanges();
               
-                List<Exam> exams = db.Exams.ToList();
+                List<Exam> exams = db.Exams.OrderByDescending(x=>x.CreatedDate).ToList();
 
                 return View(exams);
             }
@@ -56,47 +59,34 @@ namespace ExamCreator.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateExam(string data)
+        public bool CreateExam([FromBody]ExamViewModel data)
         {
-            var examObject = JObject.Parse(data);
-            var questionArray = JArray.Parse(examObject["question"].ToString());
 
             Exam exam = new Exam()
             {
-                Title = examObject["title"].ToString(),
-                Content = examObject["content"].ToString()
+                Title = data.Title,
+                Content = data.Content
             };
 
             using (var db = new Context())
             {
                 db.Add(exam);
                 db.SaveChanges();
-                exam = db.Exams.LastOrDefault();
             }
 
-            for (int i = 0; i < questionArray.Count(); i++)
-            {
-                var questionObject = JObject.Parse(questionArray[i].ToString());
-                Question question = new Question()
-                {
-                    QuestionText = questionObject["q"].ToString(),
-                    AnswerA = questionObject["a"].ToString(),
-                    AnswerB = questionObject["b"].ToString(),
-                    AnswerC = questionObject["c"].ToString(),
-                    AnswerD = questionObject["d"].ToString(),
-                    CorrectAnswer = questionObject["s"].ToString(),
-                    ExamId = exam.ExamId 
-                };
+            data.QuestionList.ForEach(question => {
 
+                question.ExamId = exam.ExamId;
+               
                 using (var db = new Context())
                 {
                     db.Add(question);
                     db.SaveChanges();
                 }
 
-            }
+            });
 
-            return RedirectToAction("Index", "Home");
+            return true;
         }
 
         public IActionResult SolveExam(int id)
@@ -110,10 +100,30 @@ namespace ExamCreator.Controllers
                     QuestionList = db.Questions.Where(x => x.ExamId == id).ToList()
                 };
 
+                TempData["id"] = id;
+
                 return View(exam);
             }
 
         }
+
+        [HttpPost]
+        public bool[] SolveExam([FromBody]string[] answers)
+        {
+            int id = (int)TempData["id"];
+            using (var db = new Context())
+            {
+                List<Question> questionList = db.Questions.Where(x => x.ExamId == id).ToList();
+                bool[] correctAnswers = new bool[4];
+
+                for(int i=0; i<4;i++)
+                correctAnswers[i] = (questionList.ElementAt(i).CorrectAnswer) == answers[i];
+
+                return correctAnswers;
+            }
+            
+        }
+
 
         public IActionResult DeleteExam(int id)
         {
@@ -130,11 +140,15 @@ namespace ExamCreator.Controllers
 
         }
 
+        [AllowAnonymous]
+        [Route("Account/Login")]
         public IActionResult Login()
         {
             return View();
         }
 
+        [AllowAnonymous]
+        [Route("Account/Login")]
         [HttpPost]
         public IActionResult Login(User user)
         {
@@ -144,8 +158,17 @@ namespace ExamCreator.Controllers
             using (var db = new Context())
             {
                 User currentUser = db.Users.Where(filter).SingleOrDefault();
+                ClaimsIdentity identity = null;
                 if (currentUser != null)
                 {
+
+                    identity = new ClaimsIdentity(new[] {
+                    new Claim(ClaimTypes.Name, currentUser.Username)
+
+                }, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    var principal = new ClaimsPrincipal(identity);
+                    var login = HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -157,6 +180,15 @@ namespace ExamCreator.Controllers
 
             return View();
         }
+
+        public IActionResult Logout()
+        {
+
+
+            var login = HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login");
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -3,32 +3,35 @@
     ViewData["Title"] = "Sınav Oluşturma";
 }
 
-
-<div id="exam" class="container p-5  d-flex justify-content-center">
-    <div role="form">
+<div id="createExam" class="container p-5  d-flex justify-content-center">
+    <form role="form" v-on:submit="createExam">
         <div class="border rounded p-2 my-2">
             <div class="row mb-2">
                 <div class="col-12">
                     <div class="input-group">
-                        <select id="lstArticles" name="lstArticles" class="form-control" v-on:change="selectArticle($event, $event.target.selectedIndex)">
-                            <option value="">Paragraf Seçiniz</option>
-                            <option v-for="article in articleList" :key="article.Key" :value="article.Key" >
+                        <select id="lstArticles" name="lstArticles" class="form-control" v-on:change="selectArticle($event, $event.target.selectedIndex)" required="">
+                            <option value="">
+                                Paragraf Seçiniz
+                            </option>
+                            <option v-for="article in articleList" :key="article.Key" :value="article.Key">
                                 {{ article.title }}
                             </option>
                         </select>
-
+                        <div class="spinner-border m-1 mt-2" role="status" v-show="loading" style="width:20px;height:20px">
+                            <span class="sr-only">Loading...</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
                     <div class="input-group">
-                        <textarea  class="form-control" v-model="article.content" style="height:180px"></textarea>
+                        <textarea class="form-control" v-model="article.Content" style="height:180px"></textarea>
                     </div>
                 </div>
             </div>
         </div>
-        @for (int i=0; i < 4; i++)
+        @for (int i = 0; i < 4; i++)
         {
             <div class="p-2 row d-flex justify-content-center border rounded my-2">
                 <div class="col-12 pb-3">
@@ -36,10 +39,7 @@
                         <div class="input-group-append">
                             <span class="input-group-text">@(i + 1).</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Soruyu Giriniz" v-model="article.question[@i].q" required />
-                        <div class="invalid-feedback">
-                            Soru boş olamaz
-                        </div>
+                        <input type="text" class="form-control" placeholder="Soruyu Giriniz" v-model="article.QuestionList[@i].QuestionText" required="" />
                     </div>
                 </div>
                 <div class="col-6 pb-1">
@@ -47,7 +47,7 @@
                         <div class="input-group-append">
                             <span class="input-group-text">A</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" v-model="article.question[@i].a" required />
+                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" v-model="article.QuestionList[@i].AnswerA" required="" />
                         <div class="invalid-feedback">
                             Cevap şıkları boş olamaz
                         </div>
@@ -58,7 +58,7 @@
                         <div class="input-group-append">
                             <span class="input-group-text">B</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" v-model="article.question[@i].b" required />
+                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" v-model="article.QuestionList[@i].AnswerB" required="" />
                         <div class="invalid-feedback">
                             Cevap şıkları boş olamaz
                         </div>
@@ -69,7 +69,7 @@
                         <div class="input-group-append">
                             <span class="input-group-text">C</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" v-model="article.question[@i].c" required />
+                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" v-model="article.QuestionList[@i].AnswerC" required="" />
                         <div class="invalid-feedback">
                             Cevap şıkları boş olamaz
                         </div>
@@ -80,7 +80,7 @@
                         <div class="input-group-append">
                             <span class="input-group-text">D</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" v-model="article.question[@i].d" required />
+                        <input type="text" class="form-control" placeholder="Cevabı Giriniz" v-model="article.QuestionList[@i].AnswerD" required="" />
                         <div class="invalid-feedback">
                             Cevap şıkları boş olamaz
                         </div>
@@ -88,7 +88,7 @@
                 </div>
                 <div class="col-6 mx-auto">
                     <div class="input-group">
-                        <select class="form-control" v-model="article.question[@i].s" required>
+                        <select class="form-control" v-model="article.QuestionList[@i].CorrectAnswer" required="">
                             <option value="">Doğru Cevabı Seçiniz</option>
                             <option value="A">A</option>
                             <option value="B">B</option>
@@ -103,12 +103,12 @@
             </div>
         }
 
-        <div class="row mt-3"> 
+        <div class="row mt-3">
             <div class="col-12">
-                <input type="button" class="btn btn-success clever-btn w-100" v-on:click="createExam" value="Sınavı Oluştur">
+                <input type="submit" class="btn btn-success clever-btn w-100" value="Sınavı Oluştur">
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 @section scripts{
@@ -116,56 +116,48 @@
     <script>
 
         let vm = new Vue({
-            el: '#exam',
+            el: '#createExam',
             data: {
                 articleList: [],
+                loading: true,
                 article: {
-                    title: '',
-                    content:'',
-                    question: [
-                        { q: '', a: '', b: '', c: '', d: '', s: '' },
-                        { q: '', a: '', b: '', c: '', d: '', s: '' },
-                        { q: '', a: '', b: '', c: '', d: '', s: '' },
-                        { q: '', a: '', b: '', c: '', d: '', s: '' }
+                    Title: '',
+                    Content:'',
+                    QuestionList: [
+                        { QuestionText: '', AnswerA: '', AnswerB: '', AnswerC: '', AnswerD: '', CorrectAnswer: '' },
+                        { QuestionText: '', AnswerA: '', AnswerB: '', AnswerC: '', AnswerD: '', CorrectAnswer: '' },
+                        { QuestionText: '', AnswerA: '', AnswerB: '', AnswerC: '', AnswerD: '', CorrectAnswer: '' },
+                        { QuestionText: '', AnswerA: '', AnswerB: '', AnswerC: '', AnswerD: '', CorrectAnswer: '' }
                     ]
 
                 }
             },
             methods: {
                 selectArticle(event, selectedIndex) {
-                    this.article.title = this.articleList[selectedIndex].title;
-                    this.article.content = this.articleList[selectedIndex].content;
+                    this.article.Title = this.articleList[selectedIndex].title;
+                    this.article.Content = this.articleList[selectedIndex].content;
                 },
                 createExam() {
                         axios({
                             method: 'post',
                             url: '/Home/CreateExam',
-                            data: {
-                                Value: this.article
+                            data: this.article
+                        }).then(response => {
+                            if (response.data){
+                                window.location.href = '/Home/Index';
                             }
-                        })
+                        });
 
                 },
-
-            },
-            updated() {
-    
 
             },
             mounted() {
                 axios.get('@Url.Action("GetArticleContent")')
                             .then(response => {
                                 this.articleList = response.data;
+                                this.loading = false;
                             });
-            },
-            watch: {
-
-
-
             }
-
-
-
 
         });
 
