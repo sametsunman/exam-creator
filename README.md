@@ -1,5 +1,7 @@
 # ExamCreator
 
-![alt text](https://github.com/sametsunman/ExamCreator/raw/master/Screenshots/1.jpg)
-
+![GitHub Logo](/screenshots/1.png)
+![GitHub Logo](/screenshots/1.png)
+![GitHub Logo](/screenshots/1.png)
+![GitHub Logo](/screenshots/1.png)
 ghfghfgh
